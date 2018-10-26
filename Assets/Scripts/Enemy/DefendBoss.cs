@@ -1,30 +1,27 @@
 ﻿using UnityEngine;
 
 //using XLua;
+/// <inheritdoc />
 /// <summary>
-/// 会隐藏的boss
+/// 有护盾的boss
 /// </summary>
 //[Hotfix]
-public class InvisibleBoss : Boss
+public class DefendBoss : Boss
 {
-    private bool isInvisible;
+    private bool isDefend;
 
-    private float invisibleTime;
-    private float recoverTime;
+    private float defendTime;
 
-    private BoxCollider box;
-    private SpriteRenderer sr;
+    public GameObject defend;
 
 
-//    [LuaCallCSharp]
+//	[LuaCallCSharp]
     void Start()
     {
         fire = transform.Find("Fire").gameObject;
         ice = transform.Find("Ice").gameObject;
         iceAni = ice.transform.GetComponent<Animator>();
         gameObjectAni = GetComponent<Animator>();
-        box = GetComponent<BoxCollider>();
-        sr = GetComponent<SpriteRenderer>();
         bossAudio = GetComponent<AudioSource>();
         playerTransform = Gun.Instance.transform;
     }
@@ -51,7 +48,14 @@ public class InvisibleBoss : Boss
         }
 
         //灼烧效果
-        fire.SetActive(Gun.Instance.Fire);
+        if (Gun.Instance.Fire)
+        {
+            fire.SetActive(true);
+        }
+        else
+        {
+            fire.SetActive(false);
+        }
 
         if (Gun.Instance.Ice)
         {
@@ -65,47 +69,38 @@ public class InvisibleBoss : Boss
             fishMove();
         }
 
-        //隐形方法
-        if (invisibleTime >= 10)
+        //保护方法
+        if (defendTime >= 10)
         {
-            invisibleTime = 0;
-            Invisible();
+            defendTime = 0;
+            DeffenMe();
         }
         else
         {
-            invisibleTime += Time.deltaTime;
-        }
-
-        if (isInvisible)
-        {
-            sr.color -= new Color(0, 0, 0, Time.deltaTime);
-            box.enabled = false;
-        }
-        else
-        {
-            sr.color += new Color(0, 0, 0, Time.deltaTime);
-            if (recoverTime >= 3)
-            {
-                recoverTime = 0;
-                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 1);
-            }
-            else
-            {
-                recoverTime += Time.deltaTime;
-            }
-
-            box.enabled = true;
+            defendTime += Time.deltaTime;
         }
     }
 
-    private void Invisible()
+    void DeffenMe()
     {
-        isInvisible = true;
-        Invoke("CloseInvisible", 3);
+        isDefend = true;
+        defend.SetActive(true);
+        Invoke("CloseDeffendMe", 3);
     }
 
-    private void CloseInvisible()
+    private void CloseDeffendMe()
     {
-        isInvisible = false;
+        defend.SetActive(false);
+        isDefend = false;
+    }
+
+    public override void TakeDamage(int attackValue)
+    {
+        if (isDefend)
+        {
+            return;
+        }
+
+        base.TakeDamage(attackValue);
     }
 }

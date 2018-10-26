@@ -5,8 +5,8 @@ using UnityEngine;
 /// <summary>
 /// 挡子弹的气泡
 /// </summary>
-public class Qipao : MonoBehaviour {
-
+public class Qipao : MonoBehaviour
+{
     //属性
     public float moveSpeed = 2;
 
@@ -14,16 +14,13 @@ public class Qipao : MonoBehaviour {
     //计时器
     private float rotateTime;
 
-    // Use this for initialization
-    void Start()
+    private void Start()
     {
-        Destroy(this.gameObject, 14);
+        Destroy(gameObject, 14);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-       
         fishMove();
     }
 
@@ -40,6 +37,4 @@ public class Qipao : MonoBehaviour {
             rotateTime += Time.deltaTime;
         }
     }
-
-   
 }

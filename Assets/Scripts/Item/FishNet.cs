@@ -1,30 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <inheritdoc />
 /// <summary>
 /// 渔网
 /// </summary>
-public class FishNet : MonoBehaviour {
+public class FishNet : MonoBehaviour
+{
+    private void Start()
+    {
+        Destroy(gameObject, 0.2f);
+    }
 
-
-	// Use this for initialization
-	void Start () {
-        Destroy(this.gameObject,0.2f);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        
-	}
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag=="fish")
+        if (other.CompareTag("fish"))
         {
-            other.GetComponent<Fish>().isnet = true;
-            
+            other.GetComponent<Fish>().isNet = true;
         }
-        
     }
 }

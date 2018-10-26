@@ -1,29 +1,24 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
+﻿using System.Collections;
 using System.IO;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+/// <inheritdoc />
 /// <summary>
 /// 加载游戏
 /// </summary>
-public class LoadGame : MonoBehaviour {
-
+public class LoadGame : MonoBehaviour
+{
     public Slider processView;
 
-	// Use this for initialization
-	void Start () {
+    private void Start()
+    {
         LoadGameMethod();
-        
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-
     }
+
+
     public void LoadGameMethod()
     {
         StartCoroutine(LoadResourceCorotine());
@@ -38,7 +33,7 @@ public class LoadGame : MonoBehaviour {
         op.allowSceneActivation = false;
         while (op.progress < 0.9f)
         {
-            toProgress = (int)op.progress * 100;
+            toProgress = (int) op.progress * 100;
             while (displayProgress < toProgress)
             {
                 ++displayProgress;
@@ -54,6 +49,7 @@ public class LoadGame : MonoBehaviour {
             SetLoadingPercentage(displayProgress);
             yield return new WaitForEndOfFrame();
         }
+
         op.allowSceneActivation = true;
     }
 
@@ -62,7 +58,7 @@ public class LoadGame : MonoBehaviour {
         UnityWebRequest request = UnityWebRequest.Get(@"http://localhost/fish.lua.txt");
         yield return request.SendWebRequest();
         string str = request.downloadHandler.text;
-        File.WriteAllText(@"C:\Users\Administrator\Desktop\XluaProjects\PlayerGamePackage\fish.lua.txt",str);
+        File.WriteAllText(@"C:\Users\Administrator\Desktop\XluaProjects\PlayerGamePackage\fish.lua.txt", str);
         UnityWebRequest request1 = UnityWebRequest.Get(@"http://localhost/fishDispose.lua.txt");
         yield return request1.SendWebRequest();
         string str1 = request1.downloadHandler.text;
@@ -73,6 +69,4 @@ public class LoadGame : MonoBehaviour {
     {
         processView.value = v / 100;
     }
-
-   
 }

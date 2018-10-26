@@ -1,19 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <inheritdoc />
 /// <summary>
 /// 金币，钻石
 /// </summary>
-public class Gold : MonoBehaviour {
-
+public class Gold : MonoBehaviour
+{
     public enum ThePlaceTo
     {
         gold,
-        diamands,
+        diamonds,
         imageGold,
-        imageDiamands
+        imageDiamonds
     }
+
     public ThePlaceTo thePlaceTo;
     private Transform playerTransform;
     public float moveSpeed = 3;
@@ -21,15 +21,17 @@ public class Gold : MonoBehaviour {
 
     private AudioSource audios;
     public AudioClip goldAudio;
-    public AudioClip diamandsAudio;
+    public AudioClip diamondsAudio;
 
     private float timeVal2;
     public float defineTime2;
     private float timeBecome;
     private float timeVal3;
 
-    public bool bossPrize = false;
-    private bool beginMove = false;
+    public bool bossPrize;
+
+    private bool beginMove;
+
     // Use this for initialization
     private void Awake()
     {
@@ -40,34 +42,27 @@ public class Gold : MonoBehaviour {
                 playerTransform = Gun.Instance.goldPlace;
                 audios.clip = goldAudio;
                 break;
-            case ThePlaceTo.diamands:
+            case ThePlaceTo.diamonds:
                 playerTransform = Gun.Instance.diamondsPlace;
-                audios.clip = diamandsAudio;
+                audios.clip = diamondsAudio;
                 break;
             case ThePlaceTo.imageGold:
                 playerTransform = Gun.Instance.imageGoldPlace;
                 audios.clip = goldAudio;
                 break;
-            case ThePlaceTo.imageDiamands:
-                playerTransform = Gun.Instance.imageDiamandsPlace;
-                audios.clip = diamandsAudio;
-                break;
-            default:
+            case ThePlaceTo.imageDiamonds:
+                playerTransform = Gun.Instance.imageDiamondsPlace;
+                audios.clip = diamondsAudio;
                 break;
         }
+
         audios.Play();
-       
     }
 
-    void Start () {
-       
-       
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        
-        if (timeBecome>=0.5f)
+
+    private void Update()
+    {
+        if (timeBecome >= 0.5f)
         {
             beginMove = true;
         }
@@ -75,22 +70,26 @@ public class Gold : MonoBehaviour {
         {
             timeBecome += Time.deltaTime;
         }
+
         if (beginMove)
         {
-            transform.position = Vector3.Lerp(transform.position, playerTransform.position, 1 / Vector3.Distance(transform.position, playerTransform.position) * Time.deltaTime * moveSpeed);
-            if (thePlaceTo == ThePlaceTo.imageDiamands || thePlaceTo == ThePlaceTo.imageGold)
+            transform.position = Vector3.Lerp(transform.position, playerTransform.position,
+                1 / Vector3.Distance(transform.position, playerTransform.position) * Time.deltaTime * moveSpeed);
+            if (thePlaceTo == ThePlaceTo.imageDiamonds || thePlaceTo == ThePlaceTo.imageGold)
             {
-                if (Vector3.Distance(transform.position, playerTransform.position)<=2)
+                if (Vector3.Distance(transform.position, playerTransform.position) <= 2)
                 {
-                    Destroy(this.gameObject);
+                    Destroy(gameObject);
                 }
+
                 return;
             }
-            if (transform.position==playerTransform.position)
+
+            if (transform.position == playerTransform.position)
             {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             }
-           
+
             timeVal2 = InistStar(timeVal2, defineTime2, star2);
         }
         else
@@ -98,24 +97,22 @@ public class Gold : MonoBehaviour {
             transform.localScale += new Vector3(Time.deltaTime * 3, Time.deltaTime * 3, Time.deltaTime * 3);
             if (bossPrize)
             {
-                if (timeVal3<=0.3f)
+                if (timeVal3 <= 0.3f)
                 {
                     timeVal3 += Time.deltaTime;
                     transform.Translate(transform.right * moveSpeed * Time.deltaTime, Space.World);
                 }
-                
             }
         }
-        
     }
-    
+
 
     private float InistStar(float timeVals, float defineTimes, GameObject stars)
     {
-
         if (timeVals >= defineTimes)
         {
-            Instantiate(stars, this.transform.position, Quaternion.Euler(this.transform.eulerAngles.x, this.transform.eulerAngles.y,this. transform.eulerAngles.z + Random.Range(-40f, 40f)));
+            Instantiate(stars, transform.position,
+                Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z + Random.Range(-40f, 40f)));
             timeVals = 0;
         }
         else

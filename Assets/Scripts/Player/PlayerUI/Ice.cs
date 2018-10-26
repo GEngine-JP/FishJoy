@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using XLua;
+
+//using XLua;
+/// <inheritdoc />
 /// <summary>
 /// 冰冻
 /// </summary>
-[Hotfix]
-public class Ice : MonoBehaviour {
-
-
+//[Hotfix]
+public class Ice : MonoBehaviour
+{
     private float timeVal = 10;
     private bool canUse = true;
 
@@ -18,8 +16,9 @@ public class Ice : MonoBehaviour {
     private float totalTime = 10;
     Button but;
     private AudioSource fireAudio;
-    private int reduceDiamands;
-    // Use this for initialization
+
+    private int reduceDiamonds;
+
     private void Awake()
     {
         but = transform.GetComponent<Button>();
@@ -28,8 +27,9 @@ public class Ice : MonoBehaviour {
     }
 
 
-    void Start () {
-        reduceDiamands = 10;
+    private void Start()
+    {
+        reduceDiamonds = 10;
     }
 
     private void Update()
@@ -38,15 +38,15 @@ public class Ice : MonoBehaviour {
         {
             timeVal = 10;
         }
+
         cdSlider.value = timeVal / totalTime;
-        if (timeVal >=10)
+        if (timeVal >= 10)
         {
             cdSlider.transform.Find("Background").gameObject.SetActive(false);
             canUse = true;
         }
         else
         {
-
             timeVal += Time.deltaTime;
         }
     }
@@ -58,17 +58,18 @@ public class Ice : MonoBehaviour {
         {
             if (!Gun.Instance.Fire && !Gun.Instance.Ice)
             {
-              
-                if (Gun.Instance.diamands <= reduceDiamands)
+                if (Gun.Instance.diamonds <= reduceDiamonds)
                 {
                     return;
                 }
+
                 if (fireAudio.isPlaying)
                 {
                     return;
                 }
+
                 fireAudio.Play();
-                Gun.Instance.DiamandsChange(-reduceDiamands);
+                Gun.Instance.DiamandsChange(-reduceDiamonds);
                 Gun.Instance.Ice = true;
                 canUse = false;
                 cdSlider.transform.Find("Background").gameObject.SetActive(true);
@@ -76,13 +77,11 @@ public class Ice : MonoBehaviour {
                 Invoke("CloseIce", 4);
             }
         }
-       
     }
 
     //关闭必杀的方法
     private void CloseIce()
     {
-     
         Gun.Instance.Ice = false;
     }
 }

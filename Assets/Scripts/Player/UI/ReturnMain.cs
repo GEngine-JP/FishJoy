@@ -1,17 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+/// <inheritdoc />
 /// <summary>
 /// 返回主界面
 /// </summary>
-public class ReturnMain : MonoBehaviour {
-
+public class ReturnMain : MonoBehaviour
+{
     private Button but;
 
-    // Use this for initialization
-    void Start()
+    private void Start()
     {
         but = GetComponent<Button>();
         but.onClick.AddListener(StartGames);
@@ -19,14 +18,6 @@ public class ReturnMain : MonoBehaviour {
 
     public void StartGames()
     {
-        
         SceneManager.LoadScene(0);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
-

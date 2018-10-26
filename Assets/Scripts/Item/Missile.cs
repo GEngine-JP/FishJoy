@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <inheritdoc />
 /// <summary>
 /// 美人鱼
 /// </summary>
-public class Missile : MonoBehaviour {
-
+public class Missile : MonoBehaviour
+{
     //属性
-    public int hp=15;
+    public int hp = 15;
     public int GetGold = 10;
-    public float moveSpeed=5;
+    public float moveSpeed = 5;
 
     //引用
     public GameObject gold;
@@ -18,27 +17,31 @@ public class Missile : MonoBehaviour {
     private GameObject ice;
     private Animator iceAni;
     private Animator gameObjectAni;
-    public GameObject deadEeffect;
+    public GameObject deadEffect;
+
     private SpriteRenderer sr;
+
     //计时器
     private float rotateTime;
 
     //开关
-    private bool hasIce = false;
+    private bool hasIce;
     private float timeVal;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         fire = transform.Find("Fire").gameObject;
         ice = transform.Find("Ice").gameObject;
         iceAni = ice.transform.GetComponent<Animator>();
         gameObjectAni = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
-        Destroy(this.gameObject, 8);
+        Destroy(gameObject, 8);
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         if (timeVal >= 7)
         {
             sr.color -= new Color(0, 0, 0, Time.deltaTime);
@@ -47,6 +50,7 @@ public class Missile : MonoBehaviour {
         {
             timeVal += Time.deltaTime;
         }
+
         //冰冻效果
         if (Gun.Instance.Ice)
         {
@@ -57,8 +61,6 @@ public class Missile : MonoBehaviour {
                 iceAni.SetTrigger("Ice");
                 hasIce = true;
             }
-
-
         }
         else
         {
@@ -71,7 +73,6 @@ public class Missile : MonoBehaviour {
         if (Gun.Instance.Fire)
         {
             fire.SetActive(true);
-
         }
         else
         {
@@ -82,6 +83,7 @@ public class Missile : MonoBehaviour {
         {
             return;
         }
+
         transform.Translate(transform.right * moveSpeed * Time.deltaTime, Space.World);
         if (rotateTime >= 5)
         {
@@ -96,22 +98,22 @@ public class Missile : MonoBehaviour {
 
     public void Lucky(int attckValue)
     {
-
         Gun.Instance.GoldChange(GetGold);
         Instantiate(gold, transform.position, transform.rotation);
         if (Gun.Instance.Fire)
         {
             attckValue *= 2;
         }
+
         hp -= attckValue;
-        if (hp<=0)
+        if (hp <= 0)
         {
-            Instantiate(deadEeffect, transform.position, transform.rotation);
+            Instantiate(deadEffect, transform.position, transform.rotation);
             gameObjectAni.SetTrigger("Die");
             Invoke("Prize", 0.7f);
-            
         }
     }
+
     private void Prize()
     {
         Gun.Instance.GoldChange(GetGold * 10);
@@ -119,6 +121,7 @@ public class Missile : MonoBehaviour {
         {
             Instantiate(gold, transform.position + new Vector3(-5f + i, 0, 0), transform.rotation);
         }
-        Destroy(this.gameObject);
+
+        Destroy(gameObject);
     }
 }

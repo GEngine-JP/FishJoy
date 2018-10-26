@@ -1,23 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <inheritdoc />
 /// <summary>
 /// 贝壳
 /// </summary>
-public class Shell : MonoBehaviour {
+public class Shell : MonoBehaviour
+{
     //计时器
     private float rotateTime;
-    private float timeVal = 0;//无敌状态计时器
-    
+    private float timeVal; //无敌状态计时器
+
     //属性
     public float moveSpeed = 5;
 
     //开关
-    private bool isDeffend=true;
-    private bool hasIce = false;
+    private bool isDefend = true;
+    private bool hasIce;
 
-   
+
     //引用
     public GameObject card;
     private GameObject fire;
@@ -26,21 +26,20 @@ public class Shell : MonoBehaviour {
     private Animator gameObjectAni;
     private SpriteRenderer sr;
     private float timeVals;
-    
 
-    // Use this for initialization
-    void Start () {
+
+    private void Start()
+    {
         fire = transform.Find("Fire").gameObject;
         ice = transform.Find("Ice").gameObject;
         iceAni = ice.transform.GetComponent<Animator>();
         gameObjectAni = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
-        Destroy(this.gameObject,10);
+        Destroy(gameObject, 10);
     }
-	
-	// Update is called once per frame
-	void Update () {
 
+    private void Update()
+    {
         if (timeVals >= 9)
         {
             sr.color -= new Color(0, 0, 0, Time.deltaTime);
@@ -49,16 +48,10 @@ public class Shell : MonoBehaviour {
         {
             timeVals += Time.deltaTime;
         }
-        //灼烧效果
-        if (Gun.Instance.Fire)
-        {
-            fire.SetActive(true);
 
-        }
-        else
-        {
-            fire.SetActive(false);
-        }
+        //灼烧效果
+        fire.SetActive(Gun.Instance.Fire);
+
         //冰冻效果
         if (Gun.Instance.Ice)
         {
@@ -69,8 +62,6 @@ public class Shell : MonoBehaviour {
                 iceAni.SetTrigger("Ice");
                 hasIce = true;
             }
-            
-
         }
         else
         {
@@ -83,6 +74,7 @@ public class Shell : MonoBehaviour {
         {
             return;
         }
+
         transform.Translate(transform.right * moveSpeed * Time.deltaTime, Space.World);
         if (rotateTime >= 5)
         {
@@ -93,50 +85,47 @@ public class Shell : MonoBehaviour {
         {
             rotateTime += Time.deltaTime;
         }
-        if (timeVal<1)
+
+        if (timeVal < 1)
         {
-           
             timeVal += Time.deltaTime;
         }
-        else if (timeVal>=1&&timeVal<1.5)
+        else if (timeVal >= 1 && timeVal < 1.5)
         {
-           
             timeVal += Time.deltaTime;
-            isDeffend = false;
+            isDefend = false;
         }
-        else if (timeVal>=1.5)
+        else if (timeVal >= 1.5)
         {
-         
-            isDeffend = true;
+            isDefend = true;
             timeVal = 0;
         }
     }
 
     public void GetEffects()
     {
-        if (isDeffend)
+        if (isDefend)
         {
-           
             return;
         }
-        else
+
+        int num = Random.Range(0, 3);
+
+        switch (num)
         {
-            int num = Random.Range(0, 3);
-            
-            switch (num)
-            {
-                case 0:Gun.Instance.CanShootForFree();
-                    break;
-                case 1:Gun.Instance.CanGetDoubleGold();
-                    break;
-                case 2:Gun.Instance.CanShootNoCD();
-                    break;
-                default:
-                    break;
-            }
-            GameObject go= Instantiate(card, transform.position, card.transform.rotation) as GameObject;
-            go.GetComponent<Card>().num = num;
-            Destroy(this.gameObject);
+            case 0:
+                Gun.Instance.CanShootForFree();
+                break;
+            case 1:
+                Gun.Instance.CanGetDoubleGold();
+                break;
+            case 2:
+                Gun.Instance.CanShootNoCD();
+                break;
         }
+
+        GameObject go = Instantiate(card, transform.position, card.transform.rotation);
+        go.GetComponent<Card>().num = num;
+        Destroy(gameObject);
     }
 }

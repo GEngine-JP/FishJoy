@@ -1,29 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <inheritdoc />
 /// <summary>
 /// 隐藏显示闪耀UI的特效,比如枪，星星
 /// </summary>
-public class ShineHide : MonoBehaviour {
-    private float timeVal = 0;
-    private bool isAdd = false;
+public class ShineHide : MonoBehaviour
+{
+    private float timeVal;
+    private bool isAdd;
     private Image img;
     public float defineTime = 3;
+
     void Awake()
     {
         img = GetComponent<Image>();
-
     }
 
     // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         timeVal += Time.deltaTime;
         if (!isAdd)
         {
@@ -44,15 +45,6 @@ public class ShineHide : MonoBehaviour {
                 isAdd = false;
                 timeVal = 0;
             }
-
         }
     }
-
 }
-
-	
-
-			
-		
-
-	

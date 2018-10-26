@@ -1,20 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using XLua;
+﻿using UnityEngine;
+
+//using XLua;
 /// <summary>
 /// boss脚本
 /// </summary>
 
-[Hotfix]
-public class Boss : MonoBehaviour {
+//[Hotfix]
+public class Boss : MonoBehaviour
+{
+    public int hp = 50;
 
-    public int hp=50;
-
-    public GameObject deadEeffect;
-    public int GetGold=10;
-    public int GetDiamands = 10;
-    public GameObject diamands;
+    public GameObject deadEffect;
+    public int GetGold = 10;
+    public int GetDiamonds = 10;
+    public GameObject diamonds;
     public GameObject gold;
     public float moveSpeed = 2;
     protected int m_reduceGold;
@@ -35,20 +34,22 @@ public class Boss : MonoBehaviour {
     protected bool hasIce;
     protected bool isAttack;
 
-    [LuaCallCSharp]
-    void Start () {
+//    [LuaCallCSharp]
+    void Start()
+    {
         fire = transform.Find("Fire").gameObject;
         ice = transform.Find("Ice").gameObject;
         iceAni = ice.transform.GetComponent<Animator>();
         gameObjectAni = GetComponent<Animator>();
         bossAudio = GetComponent<AudioSource>();
         playerTransform = Gun.Instance.transform;
-        m_reduceGold=10;
-        m_reduceDiamond=0;
-}
-	
-	// Update is called once per frame
-	void Update () {
+        m_reduceGold = 10;
+        m_reduceDiamond = 0;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         //冰冻效果
         if (Gun.Instance.Ice)
         {
@@ -59,8 +60,6 @@ public class Boss : MonoBehaviour {
                 iceAni.SetTrigger("Ice");
                 hasIce = true;
             }
-
-
         }
         else
         {
@@ -68,29 +67,31 @@ public class Boss : MonoBehaviour {
             hasIce = false;
             ice.SetActive(false);
         }
+
         //灼烧效果
         if (Gun.Instance.Fire)
         {
             fire.SetActive(true);
-
         }
         else
         {
             fire.SetActive(false);
         }
+
         if (Gun.Instance.Ice)
         {
             return;
         }
+
         //boss的行为方法
         Attack(m_reduceGold, m_reduceDiamond);
         if (!isAttack)
         {
             fishMove();
         }
-
     }
-    [LuaCallCSharp]
+
+//    [LuaCallCSharp]
     public virtual void TakeDamage(int attackValue)
     {
         if (Gun.Instance.Fire)
@@ -101,23 +102,26 @@ public class Boss : MonoBehaviour {
         hp -= attackValue;
         if (hp <= 0)
         {
-            Instantiate(deadEeffect, transform.position, transform.rotation);
+            Instantiate(deadEffect, transform.position, transform.rotation);
             Gun.Instance.GoldChange(GetGold * 10);
-            Gun.Instance.DiamandsChange(GetDiamands * 10);
+            Gun.Instance.DiamandsChange(GetDiamonds * 10);
 
             for (int i = 0; i < 11; i++)
             {
                 GameObject itemGo = Instantiate(gold, transform.position, Quaternion.Euler(transform.eulerAngles + new Vector3(0, 18 + 36 * (i - 1), 0)));
                 itemGo.GetComponent<Gold>().bossPrize = true;
             }
+
             for (int i = 0; i < 11; i++)
             {
-                GameObject itemGo = Instantiate(diamands, transform.position, Quaternion.Euler(transform.eulerAngles + new Vector3(0, 36 + 36 * (i - 1), 0)));
+                GameObject itemGo = Instantiate(diamonds, transform.position, Quaternion.Euler(transform.eulerAngles + new Vector3(0, 36 + 36 * (i - 1), 0)));
                 itemGo.GetComponent<Gold>().bossPrize = true;
             }
-            Destroy(this.gameObject);
+
+            Destroy(gameObject);
         }
     }
+
     public void fishMove()
     {
         transform.Translate(transform.right * moveSpeed * Time.deltaTime, Space.World);
@@ -132,7 +136,7 @@ public class Boss : MonoBehaviour {
         }
     }
 
-    
+
     public void Attack(int reduceGold, int reduceDiamond)
     {
         if (timeVal > 20)
@@ -147,17 +151,19 @@ public class Boss : MonoBehaviour {
         {
             timeVal += Time.deltaTime;
         }
+
         if (isAttack)
         {
-
             gameObjectAni.SetBool("isAttack", true);
-            transform.position = Vector3.Lerp(transform.position, playerTransform.position, 1 / Vector3.Distance(transform.position, playerTransform.position) * Time.deltaTime * moveSpeed);
+            transform.position = Vector3.Lerp(transform.position, playerTransform.position,
+                1 / Vector3.Distance(transform.position, playerTransform.position) * Time.deltaTime * moveSpeed);
             if (Vector3.Distance(transform.position, playerTransform.position) <= 4)
             {
                 if (reduceGold != 0)
                 {
                     Gun.Instance.GoldChange(reduceGold);
                 }
+
                 if (reduceDiamond != 0)
                 {
                     Gun.Instance.DiamandsChange(reduceDiamond);
@@ -171,9 +177,6 @@ public class Boss : MonoBehaviour {
             }
         }
     }
-
-
-
 
 
     public void ReturnAngle()

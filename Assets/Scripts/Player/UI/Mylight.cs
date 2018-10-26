@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 /// <summary>
 /// 把不可制作成动画的图片用代码做成序列帧动画
 /// </summary>
-public class Mylight : MonoBehaviour {
-
+public class Mylight : MonoBehaviour
+{
     public Sprite[] lights;
     private Image img;
     private int i;
@@ -15,18 +16,18 @@ public class Mylight : MonoBehaviour {
     private void Awake()
     {
         img = GetComponent<Image>();
-
     }
 
 
     // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (timeVal>=0.08f)
+    void Start()
+    {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (timeVal >= 0.08f)
         {
             img.sprite = lights[i];
             i++;
@@ -34,12 +35,12 @@ public class Mylight : MonoBehaviour {
             {
                 i = 0;
             }
+
             timeVal = 0;
         }
         else
         {
             timeVal += Time.deltaTime;
         }
-            
-	}
+    }
 }

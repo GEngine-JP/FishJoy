@@ -1,51 +1,48 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using XLua;
+
+//using XLua;
 /// <summary>
 /// 灼烧
 /// </summary>
-[Hotfix]
-public class Fire : MonoBehaviour {
-
+//[Hotfix]
+public class Fire : MonoBehaviour
+{
     private Button but;
     private float timeVal = 15;
     private bool canUse = true;
     private float totalTime = 15;
 
     public Slider cdSlider;
-    private int reduceDiamands;
+    private int reduceDiamonds;
 
     private void Awake()
     {
         but = transform.GetComponent<Button>();
         but.onClick.AddListener(Attack);
-   
     }
 
-    // Use this for initialization
 
-    void Start () {
-        reduceDiamands = 10;
+    private void Start()
+    {
+        reduceDiamonds = 10;
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (timeVal>=15)
+
+    private void Update()
+    {
+        if (timeVal >= 15)
         {
             timeVal = 15;
         }
-        cdSlider.value = timeVal / totalTime;
-        if (timeVal >=15)
-        {
 
+        cdSlider.value = timeVal / totalTime;
+        if (timeVal >= 15)
+        {
             canUse = true;
             cdSlider.transform.Find("Background").gameObject.SetActive(false);
         }
         else
         {
-
             timeVal += Time.deltaTime;
         }
     }
@@ -56,13 +53,12 @@ public class Fire : MonoBehaviour {
         {
             if (!Gun.Instance.Ice && !Gun.Instance.Fire)
             {
-               
-                if (Gun.Instance.diamands <= reduceDiamands)
+                if (Gun.Instance.diamonds <= reduceDiamonds)
                 {
                     return;
                 }
- 
-                Gun.Instance.DiamandsChange(-reduceDiamands);
+
+                Gun.Instance.DiamandsChange(-reduceDiamonds);
                 Gun.Instance.Fire = true;
                 canUse = false;
                 cdSlider.transform.Find("Background").gameObject.SetActive(true);
@@ -70,7 +66,6 @@ public class Fire : MonoBehaviour {
                 Invoke("CloseFire", 6);
             }
         }
-        
     }
 
     //关闭必杀的方法
@@ -78,6 +73,4 @@ public class Fire : MonoBehaviour {
     {
         Gun.Instance.Fire = false;
     }
-
-   
 }

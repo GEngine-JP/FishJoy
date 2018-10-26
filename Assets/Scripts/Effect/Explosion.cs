@@ -1,20 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+/// <inheritdoc />
 /// <summary>
 /// 爆炸特效
 /// </summary>
-public class Explosion : MonoBehaviour {
+public class Explosion : MonoBehaviour
+{
+    public float DestroyTime = 0.2f;
 
-    public float DestoryTime = 0.2f;
+    private void Start()
+    {
+        Destroy(gameObject, DestroyTime);
+    }
 
-	// Use this for initialization
-	void Start () {
-        Destroy(this.gameObject, DestoryTime);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        transform.localScale +=new Vector3(Time.deltaTime*10, Time.deltaTime*10, Time.deltaTime*10) ;
-	}
+    private void Update()
+    {
+        transform.localScale += new Vector3(Time.deltaTime * 10, Time.deltaTime * 10, Time.deltaTime * 10);
+    }
 }

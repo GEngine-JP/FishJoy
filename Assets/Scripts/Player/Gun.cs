@@ -1,33 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using XLua;
+
+//using XLua;
 
 /// <summary>
 /// 枪
 /// </summary>
-[Hotfix]
-public class Gun : MonoBehaviour {
-
-    
-
-    
+//[Hotfix]
+public class Gun : MonoBehaviour
+{
     //属性
-    public int gold=100;
-    public int diamands = 50;
-    public int gunLevel=1;
+    public int gold = 100;
+    public int diamonds = 50;
+    public int gunLevel = 1;
     private float rotateSpeed = 5f;
     public float attackCD = 1;
     private float GunCD = 4;
-    public int level=1;
+    public int level = 1;
 
     //引用
-    
-    public AudioClip[] bullectAudios;
-    private AudioSource bullectAudio;
+
+    public AudioClip[] bulletAudios;
+    private AudioSource bulletAudio;
     public Transform attackPos;
-    public GameObject[] Bullects;
+    public GameObject[] Bullets;
     public GameObject net;
     public GunChange[] gunChange;
 
@@ -35,85 +31,61 @@ public class Gun : MonoBehaviour {
     public Transform goldPlace;
     public Transform diamondsPlace;
     public Transform imageGoldPlace;
-    public Transform imageDiamandsPlace;
+    public Transform imageDiamondsPlace;
 
 
     public Text goldText;
-    public Text diamandsText;
+    public Text diamondsText;
 
-    
+
     //开关
-    private bool canShootForFree=false;
-    private bool canGetDoubleGold = false;
-    public bool canShootNoCD = false;
+    private bool canShootForFree;
+    private bool canGetDoubleGold;
+    public bool canShootNoCD;
     public bool canChangeGun = true;
-    public bool bossAttack = false;
-    public bool Fire = false;
-    public bool Ice = false;
-    public bool Butterfly = false;
-    public bool attack = false;
+    public bool bossAttack;
+    public bool Fire;
+    public bool Ice;
+    public bool Butterfly;
+    public bool attack;
 
 
     public bool changeAudio;
 
 
-    private static Gun instance;
-    public static Gun Instance
-    {
-        get
-        {
-            return instance;
-        }
-
-        set
-        {
-            instance = value;
-        }
-    }
+    public static Gun Instance { get; set; }
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
         gold = 1000;
-        diamands = 1000;
+        diamonds = 1000;
         level = 2;
-        bullectAudio = GetComponent<AudioSource>();
+        bulletAudio = GetComponent<AudioSource>();
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
 
-
-
+    private void Update()
+    {
         goldText.text = gold.ToString();
-        diamandsText.text = diamands.ToString();
+        diamondsText.text = diamonds.ToString();
 
 
         //旋转枪的方法
 
         RotateGun();
-       
 
-       
-       
-            
-        if (GunCD<=0)
+
+        if (GunCD <= 0)
         {
             canChangeGun = true;
             GunCD = 4;
-  
         }
         else
         {
             GunCD -= Time.deltaTime;
         }
-        
-       
+
 
         //攻击的方法
 
@@ -124,7 +96,7 @@ public class Gun : MonoBehaviour {
             return;
         }
 
-        if (attackCD>=1-gunLevel*0.3)
+        if (attackCD >= 1 - gunLevel * 0.3)
         {
             Attack();
             attack = true;
@@ -133,27 +105,21 @@ public class Gun : MonoBehaviour {
         {
             attackCD += Time.deltaTime;
         }
-	}
+    }
 
     /// <summary>
     /// 以下是方法的定义
     /// </summary>
 
-
-   
-
     //旋转枪
-    [LuaCallCSharp]
+//    [LuaCallCSharp]
     private void RotateGun()
     {
-        
         float h = Input.GetAxisRaw("Mouse Y");
         float v = Input.GetAxisRaw("Mouse X");
 
         transform.Rotate(-Vector3.forward * v * rotateSpeed);
         transform.Rotate(Vector3.forward * h * rotateSpeed);
-
-
 
 
         ClampAngle();
@@ -169,6 +135,7 @@ public class Gun : MonoBehaviour {
         {
             gunLevel = 1;
         }
+
         gunChange[0].ToGray();
         gunChange[1].ToGray();
         canChangeGun = false;
@@ -181,12 +148,13 @@ public class Gun : MonoBehaviour {
         {
             gunLevel = 3;
         }
+
         gunChange[0].ToGray();
         gunChange[1].ToGray();
         canChangeGun = false;
     }
 
-    
+
     //限制角度
     private void ClampAngle()
     {
@@ -200,70 +168,63 @@ public class Gun : MonoBehaviour {
             y = 150;
         }
 
-        transform.eulerAngles =new Vector3(transform.eulerAngles.x,y,transform.eulerAngles.z) ;
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, y, transform.eulerAngles.z);
     }
 
     //攻击方法
-    [LuaCallCSharp]
+//    [LuaCallCSharp]
     private void Attack()
     {
-
         if (Input.GetMouseButtonDown(0))
         {
-            
-            bullectAudio.clip = bullectAudios[gunLevel - 1];
-            bullectAudio.Play();
-           
+            bulletAudio.clip = bulletAudios[gunLevel - 1];
+            bulletAudio.Play();
+
             if (Butterfly)
             {
-                Instantiate(Bullects[gunLevel - 1], attackPos.position, attackPos.rotation*Quaternion.Euler(0,0,20));
-                Instantiate(Bullects[gunLevel - 1], attackPos.position, attackPos.rotation*Quaternion.Euler(0,0,-20));
+                Instantiate(Bullets[gunLevel - 1], attackPos.position, attackPos.rotation * Quaternion.Euler(0, 0, 20));
+                Instantiate(Bullets[gunLevel - 1], attackPos.position, attackPos.rotation * Quaternion.Euler(0, 0, -20));
             }
-       
-            Instantiate(Bullects[gunLevel - 1], attackPos.position, attackPos.rotation);
+
+            Instantiate(Bullets[gunLevel - 1], attackPos.position, attackPos.rotation);
 
 
             if (!canShootForFree)
             {
                 GoldChange(-1 - (gunLevel - 1) * 2);
-          
             }
+
             attackCD = 0;
             attack = false;
         }
-
     }
 
     //增减金钱
-    [LuaCallCSharp]
+//    [LuaCallCSharp]
     public void GoldChange(int number)
     {
         if (canGetDoubleGold)
         {
-            if (number>0)
+            if (number > 0)
             {
                 number *= 2;
             }
         }
 
-       
+
         gold += number;
     }
 
     //增减钻石
-    [LuaCallCSharp]
+//    [LuaCallCSharp]
     public void DiamandsChange(int number)
     {
-       
-
-        diamands += number;
+        diamonds += number;
     }
 
     /// <summary>
     /// 贝壳触发的一些效果方法
     /// </summary>
-
-
     public void CanShootForFree()
     {
         canShootForFree = true;

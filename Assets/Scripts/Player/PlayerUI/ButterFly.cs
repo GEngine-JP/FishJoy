@@ -1,14 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using XLua;
+
+//using XLua;
+/// <inheritdoc />
 /// <summary>
 /// 散弹按钮
 /// </summary>
-[Hotfix]
-public class ButterFly : MonoBehaviour {
-
+//[Hotfix]
+public class ButterFly : MonoBehaviour
+{
     Button but;
 
     private float timeVal = 15;
@@ -17,38 +17,35 @@ public class ButterFly : MonoBehaviour {
     public GameObject uiView;
 
     public Slider cdSlider;
-    private int reduceDiamands;
+    private int reduceDiamonds;
 
     private void Awake()
     {
         but = transform.GetComponent<Button>();
         but.onClick.AddListener(Fire);
-
     }
 
-  
-    void Start()
+
+    private void Start()
     {
-        reduceDiamands = 10;
+        reduceDiamonds = 10;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (timeVal >= 15)
         {
             timeVal = 15;
         }
+
         cdSlider.value = timeVal / totalTime;
         if (timeVal >= 15)
         {
-
             canUse = true;
             cdSlider.transform.Find("Background").gameObject.SetActive(false);
         }
         else
         {
-
             timeVal += Time.deltaTime;
         }
     }
@@ -57,12 +54,12 @@ public class ButterFly : MonoBehaviour {
     {
         if (canUse)
         {
-           
-            if (Gun.Instance.diamands <= reduceDiamands)
+            if (Gun.Instance.diamonds <= reduceDiamonds)
             {
                 return;
             }
-            Gun.Instance.DiamandsChange(-reduceDiamands);
+
+            Gun.Instance.DiamandsChange(-reduceDiamonds);
 
 
             Gun.Instance.Butterfly = true;
@@ -71,9 +68,7 @@ public class ButterFly : MonoBehaviour {
             timeVal = 0;
             Invoke("CloseFire", 8);
             uiView.SetActive(true);
-            
         }
-
     }
 
     //关闭必杀的方法
@@ -82,6 +77,4 @@ public class ButterFly : MonoBehaviour {
         uiView.SetActive(false);
         Gun.Instance.Butterfly = false;
     }
-
-
 }
